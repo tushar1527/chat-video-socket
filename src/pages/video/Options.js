@@ -52,6 +52,7 @@ const Options = ({ children }) => {
     call,
   } = useContext(SocketContext.SocketContext);
   console.log("name", name);
+  setName(localStorage.getItem("roomId"));
 
   const classes = useStyles();
   const [idToCall, setIdToCall] = useState("");
