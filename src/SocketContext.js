@@ -12,8 +12,8 @@ const ContextProvider = ({ children }) => {
   const [stream, setStream] = useState();
   const [name, setName] = useState("");
   const [call, setCall] = useState({});
-  console.log("callContext", call);
   const [me, setMe] = useState("");
+  console.log("me", me);
 
   const myVideo = useRef();
   const userVideo = useRef();
@@ -28,6 +28,10 @@ const ContextProvider = ({ children }) => {
         myVideo.current.srcObject = currentStream;
       });
 
+    // let data = {
+    //   id: localStorage.getItem("roomId"),
+    //   userId: localStorage.getItem("userId"),
+    // };
     socket.on("me", (id) => setMe(id));
 
     socket.on("callUser", ({ from, name: callerName, signal }) => {

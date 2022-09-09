@@ -9,7 +9,7 @@ export const LoginDr = () => {
   const onSubmit = async (data) => {
     let config = {
       method: "post",
-      url: "http://139.59.75.48:5001/api/v1/user-app/verify-otp",
+      url: "http://localhost:5001/api/v1/user-app/verify-otp",
       headers: {
         "Content-Type": "application/json",
       },
@@ -21,9 +21,10 @@ export const LoginDr = () => {
 
     let response = await axios(config);
     if (response) {
-      let token = jwtDecode(response.data.data.token);
+      console.log("response.data.data", response.data);
+      let token = jwtDecode(response.data.token);
       localStorage.setItem("userId", token.sub);
-      localStorage.setItem("token", response.data.data.token);
+      localStorage.setItem("token", response.data.token);
       navigate("/chat/create");
     }
   };

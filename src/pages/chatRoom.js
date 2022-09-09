@@ -6,7 +6,7 @@ export const ChatRoom = () => {
   const joinChat = async () => {
     let config = {
       method: "post",
-      url: "http://139.59.75.48:5001/api/v1/chat-room/create",
+      url: "http://localhost:5001/api/v1/chat-room/create",
       headers: {
         "Content-Type": "application/json",
       },
@@ -33,7 +33,7 @@ export const ChatRoom = () => {
   const joinVideo = async () => {
     let config = {
       method: "GET",
-      url: "http://http://139.59.75.48/api/v1/appointment/get?_id=6315e293758902b3d90f01b8&&video=true",
+      url: "http://localhost:5001/api/v1/appointment/get?_id=6319da29bc2fe6c9166d4391&&video=true",
       headers: {
         "Content-Type": "application/json",
       },
@@ -42,15 +42,16 @@ export const ChatRoom = () => {
     let dataResponse = await axios(config);
     if (dataResponse) {
       let data = dataResponse?.data?.data[0];
+      console.log("data", data);
 
       let updateResponse = {
         drId: data.drId._id,
-        appointmentId: "6315e293758902b3d90f01b8",
+        appointmentId: "6319da29bc2fe6c9166d4391",
         patientId: data?.patientId?._id,
         roomId: dataResponse?.data?.videoRoom[0]?._id,
       };
-
       console.log("updateResponse", updateResponse);
+
       localStorage.setItem("roomId", updateResponse?.roomId);
       localStorage.setItem(
         "roomData",
