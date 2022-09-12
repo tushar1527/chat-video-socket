@@ -41,17 +41,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Options = ({ children }) => {
-  const {
-    name,
-    callAccepted,
-    setName,
-    me,
-    callEnded,
-    callUser,
-    leaveCall,
-    call,
-  } = useContext(SocketContext.SocketContext);
-  console.log("name", name);
+  const { name, callAccepted, setName, me, callEnded, callUser, leaveCall } =
+    useContext(SocketContext.SocketContext);
   setName(localStorage.getItem("roomId"));
 
   const classes = useStyles();

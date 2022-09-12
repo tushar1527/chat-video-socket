@@ -1,5 +1,5 @@
 import socketIOClient from "socket.io-client";
-const socket = socketIOClient("https://my-vicearmory.tk:8000", {
+const socket = socketIOClient("http://localhost:9000", {
   extraHeaders: {
     "Access-Control-Allow-Origin": "*",
   },

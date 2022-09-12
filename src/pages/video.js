@@ -43,6 +43,7 @@ export const Video = () => {
   const classes = useStyles();
   const { answerCall, call } = useContext(SocketContext.SocketContext);
   console.log("call", call);
+
   return (
     <div className={classes.wrapper}>
       <AppBar color="inherit" className={classes.appBar}>

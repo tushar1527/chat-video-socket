@@ -9,7 +9,7 @@ export const LoginDr = () => {
   const onSubmit = async (data) => {
     let config = {
       method: "post",
-      url: "https://my-vicearmory.tk/api/v1/user-app/verify-otp",
+      url: "http://localhost:5001/api/v1/user-app/verify-otp",
       headers: {
         "Content-Type": "application/json",
       },

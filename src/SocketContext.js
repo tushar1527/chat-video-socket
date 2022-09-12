@@ -4,7 +4,9 @@ import Peer from "simple-peer";
 
 const SocketContext = createContext();
 
-const socket = io("https://my-vicearmory.tk:8001");
+const socket = io("http://localhost:9000", {
+  transports: ["websocket", "polling", "flashsocket"],
+});
 
 const ContextProvider = ({ children }) => {
   const [callAccepted, setCallAccepted] = useState(false);
@@ -13,7 +15,6 @@ const ContextProvider = ({ children }) => {
   const [name, setName] = useState("");
   const [call, setCall] = useState({});
   const [me, setMe] = useState("");
-  console.log("me", me);
 
   const myVideo = useRef();
   const userVideo = useRef();
@@ -35,15 +36,33 @@ const ContextProvider = ({ children }) => {
     socket.on("me", (id) => setMe(id));
 
     socket.on("callUser", ({ from, name: callerName, signal }) => {
-      console.log("call is coming");
       setCall({ isReceivingCall: true, from, name: callerName, signal });
     });
+    socket.on("callInit", async (data) => {
+      let userId = localStorage.getItem("userId");
+
+      if (data.userId == userId) {
+        await callUser(data.patientSocketId);
+      } else {
+        await callUser(data.drSocketId);
+      }
+    });
   }, []);
+
+  useEffect(() => {
+    let roomData = {
+      id: me,
+      roomId: localStorage.getItem("roomId"),
+      userId: localStorage.getItem("userId"),
+    };
+    socket.emit("updateId", roomData);
+  }, [me]);
 
   const answerCall = () => {
     setCallAccepted(true);
 
     const peer = new Peer({ initiator: false, trickle: false, stream });
+    const peer1 = new Peer();
 
     peer.on("signal", (data) => {
       socket.emit("answerCall", { signal: data, to: call.from });
@@ -59,27 +78,31 @@ const ContextProvider = ({ children }) => {
   };
 
   const callUser = (id) => {
-    console.log("id", id);
     const peer = new Peer({ initiator: true, trickle: false, stream });
+    const peer1 = new Peer();
 
     peer.on("signal", (data) => {
-      console.log("data", data);
       socket.emit("callUser", {
         userToCall: id,
         signalData: data,
-        from: me,
-        name,
+        from: localStorage.getItem("senderName"),
+        name: localStorage.getItem("receiverName"),
+        roomDetails: JSON.parse(localStorage.getItem("roomData")),
       });
     });
 
     peer.on("stream", (currentStream) => {
       userVideo.current.srcObject = currentStream;
     });
+    peer1.on("stream", (currentStream) => {
+      myVideo.current.srcObject = currentStream;
+    });
 
     socket.on("callAccepted", (signal) => {
       setCallAccepted(true);
 
       peer.signal(signal);
+      peer1.signal(signal);
     });
 
     connectionRef.current = peer;
