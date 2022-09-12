@@ -4,7 +4,7 @@ import Peer from "simple-peer";
 
 const SocketContext = createContext();
 
-const socket = io("http://localhost:9000", {
+const socket = io("https://way2find.tk", {
   transports: ["websocket", "polling", "flashsocket"],
 });
 
