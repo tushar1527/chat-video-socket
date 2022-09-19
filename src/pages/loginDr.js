@@ -9,7 +9,7 @@ export const LoginDr = () => {
   const onSubmit = async (data) => {
     let config = {
       method: "post",
-      url: "http://139.59.8.20:5001/api/v1/user-app/verify-otp",
+      url: "https://vinwvo.tk/api/v1/user-app/verify-otp",
       headers: {
         "Content-Type": "application/json",
       },
