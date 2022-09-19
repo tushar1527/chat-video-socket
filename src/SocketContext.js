@@ -4,9 +4,7 @@ import Peer from "simple-peer";
 
 const SocketContext = createContext();
 
-const socket = io("https://way2find.tk", {
-  transports: ["websocket", "polling", "flashsocket"],
-});
+const socket = io("https://way2find.tk");
 
 const ContextProvider = ({ children }) => {
   const [callAccepted, setCallAccepted] = useState(false);
