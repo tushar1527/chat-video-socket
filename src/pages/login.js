@@ -13,7 +13,7 @@ export const Login = () => {
   const onSubmit = async (data) => {
     let config = {
       method: "post",
-      url: "https://my-vicearmory.tk/api/v1/user-app/create",
+      url: "https://vinwvo.tk/api/v1/user-app/create",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Methods": [
