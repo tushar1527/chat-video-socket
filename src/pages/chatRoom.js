@@ -6,7 +6,7 @@ export const ChatRoom = () => {
   const joinChat = async () => {
     let config = {
       method: "post",
-      url: "https://1e43-2401-4900-1f3e-5929-bd15-a6ad-e7ab-488c.in.ngrok.io/api/v1/chat-room/create",
+      url: "https://b9e8-103-240-204-216.in.ngrok.ioapi/v1/chat-room/create",
       headers: {
         "Content-Type": "application/json",
       },
@@ -33,7 +33,7 @@ export const ChatRoom = () => {
   const joinVideo = async () => {
     let config = {
       method: "GET",
-      url: "https://1e43-2401-4900-1f3e-5929-bd15-a6ad-e7ab-488c.in.ngrok.io/api/v1/appointment/get?_id=6319da29bc2fe6c9166d4391&&video=true",
+      url: "https://b9e8-103-240-204-216.in.ngrok.ioapi/v1/appointment/get?_id=6319da29bc2fe6c9166d4391&&video=true",
       headers: {
         "Content-Type": "application/json",
       },
