@@ -11,7 +11,7 @@ export const LoginDr = () => {
   const onSubmit = async (data) => {
     let config = {
       method: "post",
-      url: `${apiUris.account}api/v1/user-app/verify-otp`,
+      url: `${apiUris.account.getUser}api/v1/user-app/verify-otp`,
       headers: {
         "Content-Type": "application/json",
       },

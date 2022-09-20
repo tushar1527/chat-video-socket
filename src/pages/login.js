@@ -14,7 +14,7 @@ export const Login = () => {
   const onSubmit = async (data) => {
     let config = {
       method: "post",
-      url: `${apiUris.account}api/v1/user-app/create`,
+      url: `${apiUris.account.getUser}api/v1/user-app/create`,
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Methods": [

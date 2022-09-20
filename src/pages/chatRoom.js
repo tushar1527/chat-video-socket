@@ -6,7 +6,7 @@ export const ChatRoom = () => {
   const joinChat = async () => {
     let config = {
       method: "post",
-      url: `${apiUris.account}api/v1/chat-room/create`,
+      url: `${apiUris.account.getUser}api/v1/chat-room/create`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -33,7 +33,7 @@ export const ChatRoom = () => {
   const joinVideo = async () => {
     let config = {
       method: "GET",
-      url: `${apiUris.account}v1/appointment/get?_id=6319da29bc2fe6c9166d4391&&video=true`,
+      url: `${apiUris.account.getUser}v1/appointment/get?_id=6319da29bc2fe6c9166d4391&&video=true`,
       headers: {
         "Content-Type": "application/json",
       },
