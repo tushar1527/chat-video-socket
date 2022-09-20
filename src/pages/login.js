@@ -13,7 +13,7 @@ export const Login = () => {
   const onSubmit = async (data) => {
     let config = {
       method: "post",
-      url: "https://902c-103-240-204-216.in.ngrok.io/api/v1/user-app/create",
+      url: "http://way2find.tk/api/v1/user-app/create",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Methods": [

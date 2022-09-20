@@ -9,7 +9,7 @@ export const LoginDr = () => {
   const onSubmit = async (data) => {
     let config = {
       method: "post",
-      url: "https://902c-103-240-204-216.in.ngrok.io/api/v1/user-app/verify-otp",
+      url: "https://1e43-2401-4900-1f3e-5929-bd15-a6ad-e7ab-488c.in.ngrok.io/api/v1/user-app/verify-otp",
       headers: {
         "Content-Type": "application/json",
       },
