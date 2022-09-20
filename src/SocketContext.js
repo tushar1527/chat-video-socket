@@ -60,7 +60,7 @@ const ContextProvider = ({ children }) => {
     setCallAccepted(true);
 
     const peer = new Peer({ initiator: false, trickle: false, stream });
-    const peer1 = new Peer();
+    const peer1 = new Peer({ initiator: false, trickle: false, stream });
 
     peer.on("signal", (data) => {
       socket.emit("answerCall", { signal: data, to: call.from });
@@ -85,6 +85,15 @@ const ContextProvider = ({ children }) => {
         signalData: data,
         from: localStorage.getItem("senderName"),
         name: localStorage.getItem("receiverName"),
+        roomDetails: JSON.parse(localStorage.getItem("roomData")),
+      });
+    });
+    peer1.on("signal", (data) => {
+      socket.emit("callUser", {
+        userToCall: id,
+        signalData: data,
+        from: localStorage.getItem("receiverName"),
+        name: localStorage.getItem("senderName"),
         roomDetails: JSON.parse(localStorage.getItem("roomData")),
       });
     });
