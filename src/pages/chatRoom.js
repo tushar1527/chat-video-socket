@@ -1,12 +1,12 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import urlData from "../utils/url";
+import apiUris from "../utils/url";
 export const ChatRoom = () => {
   let navigate = useNavigate();
   const joinChat = async () => {
     let config = {
       method: "post",
-      url: `${urlData}api/v1/chat-room/create`,
+      url: `${apiUris.account}api/v1/chat-room/create`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -33,7 +33,7 @@ export const ChatRoom = () => {
   const joinVideo = async () => {
     let config = {
       method: "GET",
-      url: `${urlData}v1/appointment/get?_id=6319da29bc2fe6c9166d4391&&video=true`,
+      url: `${apiUris.account}v1/appointment/get?_id=6319da29bc2fe6c9166d4391&&video=true`,
       headers: {
         "Content-Type": "application/json",
       },

@@ -3,7 +3,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import url from "../utils/url";
+import apiUris from "../utils/url";
 export const Login = () => {
   let navigate = useNavigate();
   const {
@@ -14,7 +14,7 @@ export const Login = () => {
   const onSubmit = async (data) => {
     let config = {
       method: "post",
-      url: `${urlData}api/v1/user-app/create`,
+      url: `${apiUris.account}api/v1/user-app/create`,
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Methods": [

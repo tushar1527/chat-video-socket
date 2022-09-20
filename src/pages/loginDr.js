@@ -3,7 +3,7 @@ import jwtDecode from "jwt-decode";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import urlData from "../utils/url";
+import apiUris from "../utils/url";
 
 export const LoginDr = () => {
   let navigate = useNavigate();
@@ -11,7 +11,7 @@ export const LoginDr = () => {
   const onSubmit = async (data) => {
     let config = {
       method: "post",
-      url: `${urlData}api/v1/user-app/verify-otp`,
+      url: `${apiUris.account}api/v1/user-app/verify-otp`,
       headers: {
         "Content-Type": "application/json",
       },
