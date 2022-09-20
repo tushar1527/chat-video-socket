@@ -3,6 +3,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import url from "../utils/url";
 export const Login = () => {
   let navigate = useNavigate();
   const {
@@ -13,7 +14,7 @@ export const Login = () => {
   const onSubmit = async (data) => {
     let config = {
       method: "post",
-      url: "https://b9e8-103-240-204-216.in.ngrok.ioapi/v1/user-app/create",
+      url: `${urlData}api/v1/user-app/create`,
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Methods": [
