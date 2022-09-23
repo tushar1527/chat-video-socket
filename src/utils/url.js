@@ -6,7 +6,8 @@ const apiUris = {};
 /**
  * base uri
  */
-const baseUri = "http://localhost:5001";
+const baseUri =
+  "https://9c34-2401-4900-1f3e-5929-8b2e-d011-2587-e623.in.ngrok.io";
 
 /**
  * account api method declarations
