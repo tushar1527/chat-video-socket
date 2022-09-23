@@ -42,6 +42,7 @@ const VideoPlayer = () => {
               ref={myVideo}
               autoPlay
               className={classes.video}
+              id="video1"
             ></video>
           </Grid>
         </Paper>
@@ -57,6 +58,7 @@ const VideoPlayer = () => {
               ref={userVideo}
               autoPlay
               className={classes.video}
+              id="video2"
             />
           </Grid>
         </Paper>
