@@ -50,7 +50,10 @@ const ContextProvider = ({ children }) => {
         setStream(src);
         myVideo.current.srcObject = src;
       })
-      .on("peerStream", (src) => setRemoteStream(src));
+      .on("peerStream", (src) => {
+        console.log("streamdata");
+        setRemoteStream(src);
+      });
     peerObj.start(true, config, me);
   };
   const answerCall = (isCaller, friendID, config) => {
@@ -60,13 +63,17 @@ const ContextProvider = ({ children }) => {
       .on("localStream", (src) => {
         myVideo.current.srcObject = src;
       })
-      .on("peerStream", (src) => (userVideo.current.srcObject = src));
+      .on("peerStream", (src) => {
+        console.log("streamdata123", src);
+        userVideo.current.srcObject = src;
+      });
     peerObj.start(true, config, me);
     socket.on("call", (data) => {
-      console.log("data", data);
       if (data.sdp) {
         peerObj.setRemoteDescription(data.sdp);
-        if (data.sdp.type === "offer") peerObj.createAnswer();
+        console.log("data", data);
+        console.log("setdescritption", data.sdp.type);
+        if (data.sdp.type === "answer") peerObj.createAnswer();
       } else peerObj.addIceCandidate(data.candidate);
     });
   };

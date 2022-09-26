@@ -37,6 +37,7 @@ class PeerConnection extends Emitter {
    */
 
   start(isCaller, config, callerId) {
+    console.log("connected", this.pc.connectionState);
     this.mediaDevice
       .on("stream", (stream) => {
         stream.getTracks().forEach((track) => {
@@ -81,6 +82,7 @@ class PeerConnection extends Emitter {
   }
 
   createAnswer() {
+    console.log("create answe");
     this.pc
       .createAnswer()
       .then(this.getDescription.bind(this))
@@ -98,8 +100,9 @@ class PeerConnection extends Emitter {
    * @param {Object} sdp - Session description
    */
   setRemoteDescription(sdp) {
-    const rtcSdp = new RTCSessionDescription(sdp);
-    this.pc.setRemoteDescription(rtcSdp);
+    console.log("sdp", sdp);
+
+    this.pc.setRemoteDescription(new RTCSessionDescription(sdp));
     console.log("this", this);
     return this;
   }
