@@ -34,6 +34,8 @@ class PeerConnection extends Emitter {
    */
 
   start(isCaller, config, callerId) {
+    console.log("callerId", callerId);
+    console.log("isCaller", isCaller);
     this.mediaDevice
       .on("stream", (stream) => {
         console.log("startstream", stream);
@@ -41,7 +43,7 @@ class PeerConnection extends Emitter {
           this.pc.addTrack(track, stream);
         });
         this.emit("localStream", stream);
-        this.emit("peerStream", stream);
+        this.emit("peerStream", { stream, id: callerId });
         const friend = this.friendID;
         if (isCaller) socket.emit("request", { to: friend, from: callerId });
         else this.createOffer();
