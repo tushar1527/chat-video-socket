@@ -41,6 +41,7 @@ class PeerConnection extends Emitter {
           this.pc.addTrack(track, stream);
         });
         this.emit("localStream", stream);
+        this.emit("peerStream", stream);
         const friend = this.friendID;
         if (isCaller) socket.emit("request", { to: friend, from: callerId });
         else this.createOffer();

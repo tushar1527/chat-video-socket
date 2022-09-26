@@ -7,7 +7,7 @@ const MediaDevice = new mediaDevice();
 
 const SocketContext = createContext();
 
-const socket = io("https://way2find.tk");
+const socket = io("http://localhost:9000");
 
 const ContextProvider = ({ children }) => {
   const [callAccepted, setCallAccepted] = useState(false);
@@ -17,8 +17,7 @@ const ContextProvider = ({ children }) => {
   const [name, setName] = useState("");
   const [call, setCall] = useState({});
   const [me, setMe] = useState("");
-  const [receiverId, setReceiverId] = useState();
-  const [state, setState] = useState();
+  const [receiverId, setReceiverId] = useState(null);
 
   // peer connection
 
@@ -29,7 +28,6 @@ const ContextProvider = ({ children }) => {
   useEffect(() => {
     let userId = localStorage.getItem("userId");
     let roomDetails = JSON.parse(localStorage.getItem("roomData"));
-    console.log("roomDetails", roomDetails);
 
     if (userId == roomDetails?.drId) {
       setReceiverId(roomDetails?.patientSocketId);
@@ -42,13 +40,14 @@ const ContextProvider = ({ children }) => {
       setCall({ isReceivingCall: true, from, name: callerName, signal });
     });
     socket.on("callInit", async (data) => {
-      console.log("data", data);
       let userId = localStorage.getItem("userId");
 
       if (data.userId == userId) {
-        await callUser(data.patientSocketId);
+        // await callUser(data.patientSocketId);
+        setReceiverId(data?.drSocketId);
       } else {
-        await callUser(data.drSocketId);
+        setReceiverId(data?.patientSocketId);
+        // await callUser(data.drSocketId);
       }
     });
   }, []);
@@ -64,23 +63,27 @@ const ContextProvider = ({ children }) => {
 
   const answerCall = () => {
     setCallAccepted(true);
+    socket.emit("answerCall", { to: receiverId, signal: call.signal });
     const config = { audio: true, video: true };
+
     let serverConnect = new PeerConnection(receiverId)
       .on("localStream", (src) => {
         setStream(src);
-
         myVideo.current.srcObject = src;
-        setStream(src);
       })
       .on("peerStream", (src) => {
-        console.log("peer stream");
+        console.log("src", src);
         userVideo.current.srcObject = src;
       });
+
     serverConnect.start(me, config, receiverId);
-    socket.on("callAccepted", (signal) => {});
+    socket.on("callAccepted", (signal) => {
+      serverConnect.emit("peerStream", stream);
+    });
   };
 
   const callUser = (id) => {
+    setReceiverId(id);
     const peer = new Peer({ initiator: true, trickle: false, stream });
 
     peer.on("signal", (data) => {

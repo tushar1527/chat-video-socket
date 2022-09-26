@@ -23,6 +23,7 @@ class MediaDevice extends Emitter {
         console.log("stream media", stream);
         this.stream = stream;
         this.emit("stream", stream);
+        this.emit("peerStream", stream);
       })
       .catch((err) => {
         if (err instanceof DOMException) {
