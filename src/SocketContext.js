@@ -8,7 +8,7 @@ const MediaDevice = new mediaDevice();
 
 const SocketContext = createContext();
 
-const socket = io("http://localhost:9000");
+const socket = io("https://way2find.tk");
 
 const ContextProvider = ({ children }) => {
   const [callAccepted, setCallAccepted] = useState(false);
