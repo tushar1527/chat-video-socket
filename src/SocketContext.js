@@ -54,7 +54,7 @@ const ContextProvider = ({ children }) => {
     peerObj.start(true, config, me);
   };
   const answerCall = (isCaller, friendID, config) => {
-    callAccepted(true);
+    setCallAccepted(true);
     console.log("answerCall");
     const peerObj = new PeerConnection(friendID)
       .on("localStream", (src) => {
