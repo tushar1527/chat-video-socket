@@ -29,7 +29,11 @@ const VideoPlayer = () => {
   const classes = useStyles();
 
   return (
-    <Grid container className={classes.gridContainer}>
+    <Grid
+      container
+      className={classes.gridContainer}
+      style={{ marginTop: "500px" }}
+    >
       {stream && (
         <Paper className={classes.paper}>
           <Grid item xs={12} md={6}>

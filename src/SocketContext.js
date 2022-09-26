@@ -63,22 +63,27 @@ const ContextProvider = ({ children }) => {
 
   const answerCall = () => {
     setCallAccepted(true);
-    socket.emit("answerCall", { to: receiverId, signal: call.signal });
+    socket.emit("answerCall", {
+      to: receiverId,
+      signal: call.signal,
+      sender: me,
+    });
     const config = { audio: true, video: true };
 
     let serverConnect = new PeerConnection(receiverId)
       .on("localStream", (src) => {
+        console.log("localStream", src);
         setStream(src);
         myVideo.current.srcObject = src;
       })
-      .on("peerStream", (src) => {
-        console.log("src", src);
-        userVideo.current.srcObject = src;
+      .on("peerStream", ({ stream, id }) => {
+        console.log("id", id, me + id == me);
+        if (id != me) userVideo.current.srcObject = stream;
       });
 
     serverConnect.start(me, config, receiverId);
     socket.on("callAccepted", (signal) => {
-      serverConnect.emit("peerStream", stream);
+      // serverConnect.emit("peerStream", stream);
     });
   };
 
