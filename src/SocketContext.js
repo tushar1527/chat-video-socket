@@ -3,19 +3,21 @@ import { io } from "socket.io-client";
 import Peer from "simple-peer";
 import PeerConnection from "./pages/PeerConnection";
 import mediaDevice from "./pages/mediaDevice";
+
 const MediaDevice = new mediaDevice();
 
 const SocketContext = createContext();
 
-const socket = io("https://way2find.tk");
+const socket = io("http://localhost:9000");
 
 const ContextProvider = ({ children }) => {
   const [callAccepted, setCallAccepted] = useState(false);
   const [callEnded, setCallEnded] = useState(false);
   const [stream, setStream] = useState();
+  const [remoteStream, setRemoteStream] = useState();
 
   const [name, setName] = useState("");
-  const [call, setCall] = useState({});
+  const [call, setCall] = useState();
   const [me, setMe] = useState("");
   const [receiverId, setReceiverId] = useState(null);
 
@@ -26,30 +28,7 @@ const ContextProvider = ({ children }) => {
   const connectionRef = useRef();
   let pc = [];
   useEffect(() => {
-    let userId = localStorage.getItem("userId");
-    let roomDetails = JSON.parse(localStorage.getItem("roomData"));
-
-    if (userId == roomDetails?.drId) {
-      setReceiverId(roomDetails?.patientSocketId);
-    } else {
-      setReceiverId(roomDetails?.drSocketId);
-    }
     socket.on("me", (id) => setMe(id));
-
-    socket.on("callUser", ({ from, name: callerName, signal }) => {
-      setCall({ isReceivingCall: true, from, name: callerName, signal });
-    });
-    socket.on("callInit", async (data) => {
-      let userId = localStorage.getItem("userId");
-
-      if (data.userId == userId) {
-        // await callUser(data.patientSocketId);
-        setReceiverId(data?.drSocketId);
-      } else {
-        setReceiverId(data?.patientSocketId);
-        // await callUser(data.drSocketId);
-      }
-    });
   }, []);
 
   useEffect(() => {
@@ -59,62 +38,39 @@ const ContextProvider = ({ children }) => {
       userId: localStorage.getItem("userId"),
     };
     socket.emit("updateId", roomData);
+    socket.on("request", ({ from: callFrom }) => {
+      setCall(callFrom);
+    });
   }, [me]);
 
-  const answerCall = () => {
-    setCallAccepted(true);
-    socket.emit("answerCall", {
-      to: receiverId,
-      signal: call.signal,
-      sender: me,
-    });
+  const callUser = (friendID) => {
     const config = { audio: true, video: true };
-
-    let serverConnect = new PeerConnection(receiverId)
+    const peerObj = new PeerConnection(friendID)
       .on("localStream", (src) => {
-        console.log("localStream", src);
         setStream(src);
         myVideo.current.srcObject = src;
       })
-      .on("peerStream", ({ stream, id }) => {
-        console.log("id", id, me + id == me);
-        if (id != me) userVideo.current.srcObject = stream;
-      });
-
-    serverConnect.start(me, config, receiverId);
-    socket.on("callAccepted", (signal) => {
-      // serverConnect.emit("peerStream", stream);
+      .on("peerStream", (src) => setRemoteStream(src));
+    peerObj.start(true, config, me);
+  };
+  const answerCall = (isCaller, friendID, config) => {
+    callAccepted(true);
+    console.log("answerCall");
+    const peerObj = new PeerConnection(friendID)
+      .on("localStream", (src) => {
+        myVideo.current.srcObject = src;
+      })
+      .on("peerStream", (src) => (userVideo.current.srcObject = src));
+    peerObj.start(true, config, me);
+    socket.on("call", (data) => {
+      console.log("data", data);
+      if (data.sdp) {
+        peerObj.setRemoteDescription(data.sdp);
+        if (data.sdp.type === "offer") peerObj.createAnswer();
+      } else peerObj.addIceCandidate(data.candidate);
     });
   };
-
-  const callUser = (id) => {
-    setReceiverId(id);
-    const peer = new Peer({ initiator: true, trickle: false, stream });
-
-    peer.on("signal", (data) => {
-      socket.emit("callUser", {
-        userToCall: id,
-        signalData: data,
-        from: localStorage.getItem("senderName"),
-        name: localStorage.getItem("receiverName"),
-        roomDetails: JSON.parse(localStorage.getItem("roomData")),
-      });
-    });
-
-    peer.on("stream", (currentStream) => {
-      myVideo.current.srcObject = currentStream;
-    });
-
-    connectionRef.current = peer;
-  };
-
-  const leaveCall = () => {
-    setCallEnded(true);
-
-    connectionRef.current.destroy();
-
-    window.location.reload();
-  };
+  const leaveCall = () => {};
 
   return (
     <SocketContext.Provider

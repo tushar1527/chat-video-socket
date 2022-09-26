@@ -42,6 +42,7 @@ const useStyles = makeStyles({
 export const Video = () => {
   const classes = useStyles();
   const { answerCall, call } = useContext(SocketContext.SocketContext);
+  console.log("Video", call);
 
   return (
     <div className={classes.wrapper}>
@@ -49,9 +50,7 @@ export const Video = () => {
         <Typography variant="h2" align="center">
           videoCHat <VideoPlayer />
           <Options>
-            {call?.name && (
-              <Notification name={call?.name} answerCall={answerCall} />
-            )}
+            {call && <Notification name={call} answerCall={answerCall} />}
           </Options>
         </Typography>
       </AppBar>

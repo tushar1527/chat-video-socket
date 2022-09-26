@@ -19,10 +19,13 @@ class PeerConnection extends Emitter {
         candidate: event.candidate,
       });
 
-    this.pc.ontrack = (event) => this.emit("peerStream", event.streams[0]);
-    // this.pc.onnegotiationneeded = () => {
-    //   this.createOffer();
-    // };
+    this.pc.ontrack = (event) => {
+      console.log("evebnt", event);
+      return this.emit("peerStream", event.streams[0]);
+    };
+    this.pc.onnegotiationneeded = () => {
+      this.createOffer();
+    };
     this.mediaDevice = new MediaDevice();
     this.friendID = friendID;
   }
@@ -34,19 +37,19 @@ class PeerConnection extends Emitter {
    */
 
   start(isCaller, config, callerId) {
-    console.log("callerId", callerId);
-    console.log("isCaller", isCaller);
     this.mediaDevice
       .on("stream", (stream) => {
-        console.log("startstream", stream);
         stream.getTracks().forEach((track) => {
           this.pc.addTrack(track, stream);
         });
         this.emit("localStream", stream);
-        this.emit("peerStream", { stream, id: callerId });
+
         const friend = this.friendID;
-        if (isCaller) socket.emit("request", { to: friend, from: callerId });
-        else this.createOffer();
+        console.log("friend", isCaller);
+        if (isCaller) {
+          console.log("isCaller", isCaller);
+          socket.emit("requestCall", { to: friend, from: callerId });
+        } else this.createOffer();
       })
       .start(config);
 
@@ -69,6 +72,7 @@ class PeerConnection extends Emitter {
   }
 
   createOffer() {
+    console.log("createoffer");
     this.pc
       .createOffer()
       .then(this.getDescription.bind(this))
@@ -96,6 +100,7 @@ class PeerConnection extends Emitter {
   setRemoteDescription(sdp) {
     const rtcSdp = new RTCSessionDescription(sdp);
     this.pc.setRemoteDescription(rtcSdp);
+    console.log("this", this);
     return this;
   }
 

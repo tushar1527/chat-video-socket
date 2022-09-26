@@ -20,10 +20,8 @@ class MediaDevice extends Emitter {
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then((stream) => {
-        console.log("stream media", stream);
         this.stream = stream;
         this.emit("stream", stream);
-        this.emit("peerStream", stream);
       })
       .catch((err) => {
         if (err instanceof DOMException) {
