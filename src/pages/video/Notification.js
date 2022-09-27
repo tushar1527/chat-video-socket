@@ -2,7 +2,6 @@ import React from "react";
 import { Button } from "@mui/material";
 const Notification = ({ name, answerCall }) => {
   const acceptCall = () => {
-    console.log("acceptCall", acceptCall);
     const config = { audio: true, video: true };
     answerCall(false, name, config);
   };
