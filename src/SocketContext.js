@@ -8,7 +8,7 @@ const MediaDevice = new mediaDevice();
 
 const SocketContext = createContext();
 
-const socket = io("https://way2find.tk");
+const socket = io("http://localhost:9000");
 
 const ContextProvider = ({ children }) => {
   const [callAccepted, setCallAccepted] = useState(false);
@@ -44,41 +44,45 @@ const ContextProvider = ({ children }) => {
   }, [me]);
 
   const callUser = (friendID) => {
+    console.log("friendID", friendID);
     const config = { audio: true, video: true };
     const peerObj = new PeerConnection(friendID)
       .on("localStream", (src) => {
+        console.log("Streamfr", src);
         setStream(src);
         myVideo.current.srcObject = src;
       })
       .on("peerStream", (src) => {
-        console.log("streamdata");
+        console.log("perStreamfr", src);
         setRemoteStream(src);
       });
     peerObj.start(true, config, me);
   };
   const answerCall = (isCaller, friendID, config) => {
     setCallAccepted(true);
-    console.log("answerCall");
     const peerObj = new PeerConnection(friendID)
       .on("localStream", (src) => {
+        console.log("localStream", src);
         myVideo.current.srcObject = src;
       })
       .on("peerStream", (src) => {
-        console.log("streamdata123", src);
+        console.log("perStream", src);
         userVideo.current.srcObject = src;
       });
-    peerObj.start(true, config, me);
+    peerObj.start(false, config, me);
     socket.on("call", (data) => {
       if (data.sdp) {
+        console.log("datasdp", data);
         peerObj.setRemoteDescription(data.sdp);
-        console.log("data", data);
-        console.log("setdescritption", data.sdp.type);
-        if (data.sdp.type === "answer") peerObj.createAnswer();
-      } else peerObj.addIceCandidate(data.candidate);
+
+        if (data.sdp.type === "offer") peerObj.createAnswer();
+      } else {
+        peerObj.addIceCandidate(data.candidate);
+      }
     });
   };
   const leaveCall = () => {};
-
+  const startCall = () => {};
   return (
     <SocketContext.Provider
       value={{
