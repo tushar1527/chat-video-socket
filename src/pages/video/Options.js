@@ -41,8 +41,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Options = ({ children }) => {
-  const { name, callAccepted, setName, me, callEnded, callUser, leaveCall } =
-    useContext(SocketContext.SocketContext);
+  const {
+    name,
+    callAccepted,
+    setName,
+    me,
+    callEnded,
+    callUser,
+    leaveCall,
+    screenShare,
+  } = useContext(SocketContext.SocketContext);
   setName(localStorage.getItem("roomId"));
 
   const classes = useStyles();
@@ -86,16 +94,28 @@ const Options = ({ children }) => {
                 onChange={(e) => setIdToCall(e.target.value)}
               />
               {callAccepted && !callEnded ? (
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  startIcon={<PhoneDisabled fontSize="large" />}
-                  fullWidth
-                  className={classes.margin}
-                  onClick={leaveCall}
-                >
-                  Hangup
-                </Button>
+                <>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<PhoneDisabled fontSize="large" />}
+                    fullWidth
+                    className={classes.margin}
+                    onClick={leaveCall}
+                  >
+                    Hangup
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<Phone fontSize="large" />}
+                    fullWidth
+                    className={classes.margin}
+                    onClick={() => screenShare(idToCall)}
+                  >
+                    screenShare
+                  </Button>
+                </>
               ) : (
                 <Button
                   variant="contained"

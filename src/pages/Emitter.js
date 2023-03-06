@@ -6,6 +6,7 @@ class Emitter {
   }
 
   emit(event, ...args) {
+    console.log("Aaa", event);
     if (this.events[event]) {
       this.events[event].forEach((fn) => fn(...args));
     }

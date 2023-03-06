@@ -6,8 +6,7 @@ const apiUris = {};
 /**
  * base uri
  */
-const baseUri =
-  "https://fce0-2401-4900-1f3e-203f-cb33-c4a2-4046-4046.in.ngrok.io";
+const baseUri = "http://157.245.108.170:5001";
 
 /**
  * account api method declarations

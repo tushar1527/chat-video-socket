@@ -1,8 +1,19 @@
 import MediaDevice from "./mediaDevice";
+import ScreenShare from "./mediaDevice/screenShare";
 import Emitter from "./Emitter";
 import socket from "./socket";
 
-const PC_CONFIG = { iceServers: [{ urls: ["stun:stun.l.google.com:19302"] }] };
+const PC_CONFIG = {
+  iceServers: [
+    {
+      urls: [
+        "stun:stun.l.google.com:19302",
+        "stun:stun1.l.google.com:19302",
+        "stun:stun2.l.google.com:19302",
+      ],
+    },
+  ],
+};
 
 class PeerConnection extends Emitter {
   /**
@@ -20,7 +31,6 @@ class PeerConnection extends Emitter {
       });
 
     this.pc.ontrack = (event) => {
-      console.log("evebnt", event);
       return this.emit("peerStream", event.streams[0]);
     };
     this.pc.onnegotiationneeded = () => {
@@ -28,7 +38,11 @@ class PeerConnection extends Emitter {
       else this.createOffer();
     };
     this.mediaDevice = new MediaDevice();
+
     this.friendID = friendID;
+    this.pc.addEventListener("icecandidateerror", (data) => {
+      console.log("icecandidateerror", data);
+    });
   }
 
   /**
@@ -38,9 +52,9 @@ class PeerConnection extends Emitter {
    */
 
   start(isCaller, config, callerId) {
-    console.log("connected", this.pc.connectionState);
     this.mediaDevice
       .on("stream", (stream) => {
+        console.log("stream", stream);
         stream.getTracks().forEach((track) => {
           this.pc.addTrack(track, stream);
         });
@@ -92,7 +106,12 @@ class PeerConnection extends Emitter {
   getDescription(desc) {
     console.log("desc", desc);
     this.pc.setLocalDescription(desc);
-    socket.emit("call", { to: this.friendID, sdp: desc });
+
+    let idToCall = this.friendID
+      ? this.friendID
+      : localStorage.getItem("friendID");
+    console.log("idToCall", desc);
+    socket.emit("call", { to: idToCall, sdp: desc });
     return this;
   }
 
@@ -117,6 +136,18 @@ class PeerConnection extends Emitter {
       console.log("candidate", candidate);
     }
     return this;
+  }
+  screenShare() {
+    console.log("friendId", this.friendID);
+    this.screenShareDevice = new ScreenShare(this.friendID);
+    this.screenShareDevice
+      .on("screenShare", (stream) => {
+        console.log("screenShare", stream);
+        stream.getTracks().forEach((track) => {
+          this.pc.addTrack(track, stream);
+        });
+      })
+      .start();
   }
 }
 

@@ -24,10 +24,8 @@ const useStyles = makeStyles({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    width: "600px",
+
     border: "2px solid black",
-    height: "80vh",
-    overflow: "scroll",
   },
   image: {
     marginLeft: "15px",
@@ -45,14 +43,12 @@ export const Video = () => {
 
   return (
     <div className={classes.wrapper}>
-      <AppBar color="inherit" className={classes.appBar}>
-        <Typography variant="h2" align="center">
-          videoCHat <VideoPlayer />
-          <Options>
-            {call && <Notification name={call} answerCall={answerCall} />}
-          </Options>
-        </Typography>
-      </AppBar>
+      <Typography variant="h2" align="center">
+        videoCHat <VideoPlayer />
+        <Options>
+          {call && <Notification name={call} answerCall={answerCall} />}
+        </Options>
+      </Typography>
     </div>
   );
 };

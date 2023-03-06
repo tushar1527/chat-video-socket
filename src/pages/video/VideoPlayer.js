@@ -2,6 +2,8 @@ import React, { useContext } from "react";
 import { makeStyles } from "@mui/styles";
 import { Grid, Typography, Paper } from "@mui/material";
 import SocketContext from "../../SocketContext";
+import Options from "./Options";
+import Notification from "./Notification";
 const useStyles = makeStyles({
   video: {
     width: "550px",
@@ -23,17 +25,20 @@ const useStyles = makeStyles({
   },
 });
 const VideoPlayer = () => {
-  const { name, callAccepted, myVideo, userVideo, stream, call } = useContext(
-    SocketContext.SocketContext
-  );
+  const {
+    name,
+    callAccepted,
+    myVideo,
+    userVideo,
+    stream,
+    call,
+    screenShare,
+    answerCall,
+  } = useContext(SocketContext.SocketContext);
   const classes = useStyles();
 
   return (
-    <Grid
-      container
-      className={classes.gridContainer}
-      style={{ marginTop: "500px" }}
-    >
+    <Grid container className={classes.gridContainer}>
       {stream && (
         <Paper className={classes.paper}>
           <Grid item xs={12} md={6}>
@@ -65,6 +70,36 @@ const VideoPlayer = () => {
               id="video2"
             />
           </Grid>
+          <Grid>
+            <Typography variant="h5" gutterBottom>
+              {call.name || "2nd user"}
+            </Typography>
+            <video
+              playsInline
+              ref={screenShare}
+              autoPlay
+              className={classes.video}
+              id="video2"
+            />
+          </Grid>
+          <Grid>
+            <Typography variant="h5" gutterBottom>
+              {call.name || "screenshare"}
+            </Typography>
+            <video
+              playsInline
+              ref={screenShare}
+              autoPlay
+              className={classes.video}
+              id="video2"
+            />
+          </Grid>
+
+          <Options>
+            {call && call.notification && (
+              <Notification name={call} answerCall={answerCall} />
+            )}
+          </Options>
         </Paper>
       )}
     </Grid>
